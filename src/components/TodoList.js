@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
-
+import TodoItem from './TodoItem';
+import { ListGroup } from 'react-bootstrap'
 class TodoList extends Component {
   render() {
     return (
-      <div>
-      <ul>
+      <ListGroup>
         {this.props.todos.map(todo =>
-          (<li key={todo.id}>{todo.todo}</li>)
+          (<TodoItem todo={todo} />)
         )}
-      </ul>
-      </div>
+      </ListGroup>
     );
   }
 }

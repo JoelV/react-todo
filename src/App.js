@@ -33,8 +33,10 @@ class App extends Component {
                 <TodoAdd todos={this.state.todos} updateTodos={this.updateTodos}></TodoAdd>
               </Col>
             </Row>
-            <Row>
-              <TodoList todos={this.state.todos}></TodoList>
+            <Row style={{marginTop:'10px'}}>
+              <Col md={4}>
+                <TodoList todos={this.state.todos}></TodoList>
+              </Col>
             </Row>
           </Grid>
         </div>
