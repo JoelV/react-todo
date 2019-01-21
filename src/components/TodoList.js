@@ -6,7 +6,7 @@ class TodoList extends Component {
     return (
       <ListGroup>
         {this.props.todos.map(todo =>
-          (<TodoItem todo={todo} />)
+          (<TodoItem key={todo.id} todo={todo} />)
         )}
       </ListGroup>
     );
