@@ -7,16 +7,25 @@ class TodoItem extends Component {
       isDone: false
     };
     this.handleCheckChanged = this.handleCheckChanged.bind(this)
+    this.showTodo = this.showTodo.bind(this)
   }
   handleCheckChanged(e) {
-    this.setState({ isDone: !this.state.isDone })
+    this.props.flipIsDone(this.props.todo)
+  }
+  showTodo(todo) {
+    if (todo.isDone === true) {
+      return <del>{todo.todo}</del>
+    } else {
+      return (todo.todo)
+    }
   }
   render() {
     return (
       <ListGroupItem>
-        <Checkbox checked={this.state.isDone}
-                  onChange={this.handleCheckChanged}>
-          {this.props.todo.todo}
+        <Checkbox checked={this.props.isDone}
+                  onChange={this.handleCheckChanged}
+                  >
+          {this.showTodo(this.props.todo)}
         </Checkbox>
       </ListGroupItem>
     );

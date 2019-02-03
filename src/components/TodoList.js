@@ -6,7 +6,8 @@ class TodoList extends Component {
     return (
       <ListGroup>
         {this.props.todos.map(todo =>
-          (<TodoItem key={todo.id} todo={todo} />)
+          (<TodoItem key={todo.id} todo={todo}
+                     flipIsDone={this.props.flipIsDone}/>)
         )}
       </ListGroup>
     );
