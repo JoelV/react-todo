@@ -97,10 +97,10 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Navbar>
+        <Navbar style={{'background-color': '#057A07'}}>
           <Navbar.Header>
             <Navbar.Brand>
-              <a href="#home">Todo</a>
+              <a href="#home" style={{'color':'#FFFFFF'}}>Raspberry PI Todo</a>
             </Navbar.Brand>
           </Navbar.Header>
         </Navbar>
@@ -119,13 +119,13 @@ class App extends Component {
             </Row>
             <Row>
               <Col md={1}>
-                <Button variant="danger" onClick={this.clearCompleted}>Clear Completed</Button>
+                <Button style={{'background-color': '#ED7B64'}} onClick={this.clearCompleted}>Clear Completed</Button>
               </Col>
             </Row>
             <Row>
-              <Col md={8}>
-                  <TodoList todos={this.state.completedTodos}
-                            flipIsDone={this.flipIsDone}/>
+              <Col md={8} style={{marginTop:'10px'}}>
+                <TodoList todos={this.state.completedTodos}
+                          flipIsDone={this.flipIsDone}/>
               </Col>
             </Row>
           </Grid>

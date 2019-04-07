@@ -29,8 +29,8 @@ class TodoAdd extends Component {
         return r.json()
       })
       .then(r => {
-        console.log(r)
         this.props.updateTodos(r)
+        this.setState({ todoText: '' })
       })
     
   }
@@ -48,7 +48,7 @@ class TodoAdd extends Component {
             value={this.state.todoText}
           />
       </FormGroup>
-      <Button type="submit" variant="primary">Create Todo</Button>
+      <Button type="submit" style={{'background-color': '#7EE18A'}}>Create Todo</Button>
     </form>
     );
   }
