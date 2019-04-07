@@ -5,6 +5,7 @@ const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const lodashId = require('lodash-id')
 const path = require('path');
+const R = require('ramda')
 
 const adapter = new FileSync('./db/db.json')
 const db = low(adapter)
@@ -45,13 +46,14 @@ app.put('/api/todo/:id', (req, res) => {
   const newTodo = todos.find({ id: req.params.id })
     .assign(todo)
     .write()
-  console.log('!!!!!')
   console.log(newTodo)
   res.send('ok')
 })
 
-app.put('/api/todo/clear-completed', (req, res) => {
+app.put('/api/todo/bulk/delete', (req, res) => {
+  console.log('bulk delete')
   const completedTodos = req.body
+  console.log(completedTodos)
   R.forEach(completedTodo => {
     todos.remove(completedTodo).write()
   }, completedTodos)

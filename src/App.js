@@ -82,8 +82,7 @@ class App extends Component {
   }
 
   clearCompleted(e) {
-    console.log('foo')
-    fetch('/api/todo/clear-completed', {
+    fetch('/api/todo/bulk/delete', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
