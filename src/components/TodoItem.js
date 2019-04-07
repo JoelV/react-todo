@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListGroupItem, Checkbox, Button, ButtonGroup, Row, Col } from 'react-bootstrap'
+import { ListGroupItem, Checkbox  } from 'react-bootstrap'
 class TodoItem extends Component {
   constructor(props) {
     super(props);

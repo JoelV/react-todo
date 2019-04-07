@@ -5,16 +5,6 @@ import TodoList from './components/TodoList'
 import TodoAdd from './components/TodoAdd'
 import * as R from 'ramda';
 
-
-const byDone = R.groupBy((todo) => {
-  if(!todo) return 'notDone'
-  if(todo.isDone === true) {
-    return 'isDone';
-  } else {
-    return 'notDone'
-  }
-});
-
 function buildTodos(allTodos) {
   const completedTodos = R.filter(todo => todo.isDone === true, allTodos)
   const todos = R.reject(todo => todo.isDone === true, allTodos)
