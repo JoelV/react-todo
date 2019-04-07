@@ -48,7 +48,7 @@ class TodoAdd extends Component {
             value={this.state.todoText}
           />
       </FormGroup>
-      <Button type="submit">Create Todo</Button>
+      <Button type="submit" variant="primary">Create Todo</Button>
     </form>
     );
   }

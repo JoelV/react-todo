@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Navbar, Grid, Row, Col} from 'react-bootstrap';
+import { Navbar, Grid, Row, Col, Button} from 'react-bootstrap';
 import TodoList from './components/TodoList'
 import TodoAdd from './components/TodoAdd'
 import * as R from 'ramda';
@@ -14,52 +14,87 @@ const byDone = R.groupBy((todo) => {
     return 'notDone'
   }
 });
+
+function buildTodos(allTodos) {
+  const completedTodos = R.filter(todo => todo.isDone === true, allTodos)
+  const todos = R.reject(todo => todo.isDone === true, allTodos)
+
+  return {
+    completedTodos,
+    todos
+  }
+}
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      todos: null
+      todos: [],
+      completedTodos: []
     }
     this.updateTodos = this.updateTodos.bind(this)
     this.flipIsDone = this.flipIsDone.bind(this)
-    this.orderTodos = this.orderTodos.bind(this)
+    this.clearCompleted = this.clearCompleted.bind(this)
   }
   componentWillMount() {
     fetch('/api/todo')
       .then(r => {
         return r.json()
       })
-      .then(todos => {
-        this.setState({ todos })
+      .then(allTodos => {
+        this.setState(buildTodos(allTodos))
       })
   }
   updateTodos(newTodo) {
     this.setState({ todos: [...this.state.todos, newTodo]})
   }
   flipIsDone(todo) {
-    const index = R.findIndex(R.propEq('id', todo.id))(this.state.todos)
-    
-    const flippedTodo = R.assoc('isDone', !todo.isDone, todo)
-    console.log(flippedTodo)
-    fetch('/api/todo/' + flippedTodo.id, {
+    if(todo.isDone === false) {
+      const id = todo.id
+      const flippedTodo = R.assoc('isDone', !todo.isDone, todo)
+      fetch('/api/todo/' + flippedTodo.id, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(flippedTodo)
+      })
+        .then(() => {
+          const updatedTodo = R.reject(todo => todo.id === id, this.state.todos)
+          const updatedCompletedTodo = R.concat([flippedTodo], this.state.completedTodos)
+          this.setState({ todos: updatedTodo, completedTodos: updatedCompletedTodo })
+        })
+    } else {
+      const id = todo.id
+      const flippedTodo = R.assoc('isDone', !todo.isDone, todo)
+      fetch('/api/todo/' + flippedTodo.id, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(flippedTodo)
+      })
+        .then(() => {
+          const updatedTodo = R.concat([flippedTodo], this.state.todos)
+          const updatedCompletedTodo = R.reject(todo => todo.id === id, this.state.completedTodos)
+          this.setState({ todos: updatedTodo, completedTodos: updatedCompletedTodo })
+        })
+    }
+  }
+
+  clearCompleted(e) {
+    console.log('foo')
+    fetch('/api/todo/clear-completed', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(flippedTodo)
+      body: JSON.stringify(this.state.completedTodos)
     })
-      .then(() => {
-        this.setState({ todos: R.assocPath([index], flippedTodo, this.state.todos) })
+      .then(r => {
+        this.setState({ completedTodos: [] })
       })
-    
   }
-  orderTodos(todos) {
-    if(!todos) return []
-    const splittedTodos = byDone(todos)
-    const notDone = splittedTodos.notDone || []
-    const isDone = splittedTodos.isDone || []
-    return R.concat(notDone, isDone)
-  }
+  
   render() {
     return (
       <div>
@@ -79,8 +114,19 @@ class App extends Component {
             </Row>
             <Row style={{marginTop:'10px'}}>
               <Col md={8}>
-                <TodoList todos={this.orderTodos(this.state.todos)}
+                <TodoList todos={this.state.todos}
                           flipIsDone={this.flipIsDone}/>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={1}>
+                <Button variant="danger" onClick={this.clearCompleted}>Clear Completed</Button>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={8}>
+                  <TodoList todos={this.state.completedTodos}
+                            flipIsDone={this.flipIsDone}/>
               </Col>
             </Row>
           </Grid>

@@ -17,8 +17,9 @@ class TodoItem extends Component {
     }
   }
   render() {
+    const style = this.props.todo.isDone === true? { background: 'lightgrey'} : {}
     return (
-      <ListGroupItem>
+      <ListGroupItem style={style}>
         <Checkbox checked={this.props.todo.isDone}
                   onChange={this.handleCheckChanged}
                   >

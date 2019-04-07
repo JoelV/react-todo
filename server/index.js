@@ -48,7 +48,15 @@ app.put('/api/todo/:id', (req, res) => {
   console.log('!!!!!')
   console.log(newTodo)
   res.send('ok')
+})
 
+app.put('/api/todo/clear-completed', (req, res) => {
+  const completedTodos = req.body
+  R.forEach(completedTodo => {
+    todos.remove(completedTodo).write()
+  }, completedTodos)
+
+  res.send('ok')
 })
 
 
