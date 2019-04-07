@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import { ListGroupItem, Checkbox } from 'react-bootstrap'
+import { ListGroupItem, Checkbox, Button, ButtonGroup, Row, Col } from 'react-bootstrap'
 class TodoItem extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isDone: false
-    };
     this.handleCheckChanged = this.handleCheckChanged.bind(this)
     this.showTodo = this.showTodo.bind(this)
   }
@@ -22,10 +19,10 @@ class TodoItem extends Component {
   render() {
     return (
       <ListGroupItem>
-        <Checkbox checked={this.props.isDone}
+        <Checkbox checked={this.props.todo.isDone}
                   onChange={this.handleCheckChanged}
                   >
-          {this.showTodo(this.props.todo)}
+            {this.showTodo(this.props.todo)}
         </Checkbox>
       </ListGroupItem>
     );

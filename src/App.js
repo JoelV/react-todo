@@ -7,6 +7,7 @@ import * as R from 'ramda';
 
 
 const byDone = R.groupBy((todo) => {
+  if(!todo) return 'notDone'
   if(todo.isDone === true) {
     return 'isDone';
   } else {
@@ -17,21 +18,43 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      todos: [{ id: 1, todo: 'get your shit together', isDone: true },
-              { id: 2, todo: 'foo bar', isDone: false }]
+      todos: null
     }
     this.updateTodos = this.updateTodos.bind(this)
     this.flipIsDone = this.flipIsDone.bind(this)
     this.orderTodos = this.orderTodos.bind(this)
+  }
+  componentWillMount() {
+    fetch('/api/todo')
+      .then(r => {
+        return r.json()
+      })
+      .then(todos => {
+        this.setState({ todos })
+      })
   }
   updateTodos(newTodo) {
     this.setState({ todos: [...this.state.todos, newTodo]})
   }
   flipIsDone(todo) {
     const index = R.findIndex(R.propEq('id', todo.id))(this.state.todos)
-    this.setState({ todos: R.assocPath([index, 'isDone'], !todo.isDone, this.state.todos) })
+    
+    const flippedTodo = R.assoc('isDone', !todo.isDone, todo)
+    console.log(flippedTodo)
+    fetch('/api/todo/' + flippedTodo.id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(flippedTodo)
+    })
+      .then(() => {
+        this.setState({ todos: R.assocPath([index], flippedTodo, this.state.todos) })
+      })
+    
   }
   orderTodos(todos) {
+    if(!todos) return []
     const splittedTodos = byDone(todos)
     const notDone = splittedTodos.notDone || []
     const isDone = splittedTodos.isDone || []
@@ -55,7 +78,7 @@ class App extends Component {
               </Col>
             </Row>
             <Row style={{marginTop:'10px'}}>
-              <Col md={4}>
+              <Col md={8}>
                 <TodoList todos={this.orderTodos(this.state.todos)}
                           flipIsDone={this.flipIsDone}/>
               </Col>

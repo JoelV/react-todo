@@ -14,10 +14,25 @@ class TodoAdd extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const newTodo = {
-      id: Date.now(),
-      todo: this.state.todoText
+      todo: this.state.todoText,
+      isDone: false
     }
-    this.props.updateTodos(newTodo)
+    fetch('/api/todo', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newTodo)
+    })
+      .then((r) => {
+        return r.json()
+      })
+      .then(r => {
+        console.log(r)
+        this.props.updateTodos(r)
+      })
+    
   }
   render() {
     return (
